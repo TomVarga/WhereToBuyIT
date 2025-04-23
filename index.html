@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Where To Buy IT</title>
+    <link rel="stylesheet" href="styles.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/mathjs/11.12.0/math.js"></script>
+</head>
+<body>
+    <main>
+        <div class="header">
+            <h1>Where To Buy IT</h1>
+            <button id="theme-toggle" class="theme-toggle">
+                <span class="light-icon">☀️</span>
+                <span class="dark-icon">🌙</span>
+            </button>
+        </div>
+        
+        <div class="grid">
+            <div class="store" id="store1">
+                <div class="store-name-input">
+                    <input type="text" class="store-name" data-store="1" placeholder="Store 1" value="Store 1">
+                </div>
+                <div class="input-group">
+                    <label>
+                        Price of item:
+                        <input type="text" class="price" data-store="1" placeholder="e.g. 5.99">
+                    </label>
+                    <label>
+                        Units in item:
+                        <input type="text" class="units" data-store="1" placeholder="e.g. 2">
+                    </label>
+                    <label>
+                        Quantity to buy:
+                        <input type="text" class="quantity" data-store="1" placeholder="e.g. 3">
+                    </label>
+                    <label>
+                        Delivery fee:
+                        <input type="text" class="delivery" data-store="1" placeholder="e.g. 600+150+289">
+                    </label>
+                </div>
+                <div class="results">
+                    <div class="total">Total: $0.00 (0 units)</div>
+                    <div class="unit-prices">
+                        <div class="base-price">Base price per unit: $0.00</div>
+                        <div class="total-price">Total price per unit (with delivery): $0.00</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="store" id="store2">
+                <div class="store-name-input">
+                    <input type="text" class="store-name" data-store="2" placeholder="Store 2" value="Store 2">
+                </div>
+                <div class="input-group">
+                    <label>
+                        Price of item:
+                        <input type="text" class="price" data-store="2" placeholder="e.g. 5.99">
+                    </label>
+                    <label>
+                        Units in item:
+                        <input type="text" class="units" data-store="2" placeholder="e.g. 2">
+                    </label>
+                    <label>
+                        Quantity to buy:
+                        <input type="text" class="quantity" data-store="2" placeholder="e.g. 3">
+                    </label>
+                    <label>
+                        Delivery fee:
+                        <input type="text" class="delivery" data-store="2" placeholder="e.g. 600+150+289">
+                    </label>
+                </div>
+                <div class="results">
+                    <div class="total">Total: $0.00 (0 units)</div>
+                    <div class="unit-prices">
+                        <div class="base-price">Base price per unit: $0.00</div>
+                        <div class="total-price">Total price per unit (with delivery): $0.00</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="price-difference">
+            <div class="difference-amount">Difference: $0.00</div>
+            <div class="savings-message"></div>
+        </div>
+    </main>
+    <script src="script.js"></script>
+</body>
+</html> 
