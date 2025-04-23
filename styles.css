@@ -196,4 +196,30 @@ h1 {
 .savings-message {
     font-size: 1.2rem;
     color: var(--secondary-text);
+}
+
+.controls {
+    display: flex;
+    gap: 1rem;
+    align-items: center;
+}
+
+.currency-select {
+    padding: 0.5rem;
+    border: 2px solid var(--store-border);
+    border-radius: 4px;
+    background-color: var(--input-bg);
+    color: var(--text-color);
+    font-size: 1rem;
+    cursor: pointer;
+    transition: border-color 0.3s;
+}
+
+.currency-select:hover {
+    border-color: var(--text-color);
+}
+
+.currency-select option {
+    background-color: var(--bg-color);
+    color: var(--text-color);
 } 
