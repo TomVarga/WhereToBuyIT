@@ -3,6 +3,14 @@ document.addEventListener('DOMContentLoaded', () => {
     const themeToggle = document.getElementById('theme-toggle');
     const currencySelect = document.getElementById('currency-select');
     
+    // Add version check
+    const STORAGE_VERSION = '1.0';
+    const currentVersion = localStorage.getItem('whereToBuyItVersion');
+    if (currentVersion !== STORAGE_VERSION) {
+        localStorage.clear();
+        localStorage.setItem('whereToBuyItVersion', STORAGE_VERSION);
+    }
+    
     const currencySymbols = {
         'USD': '$',
         'EUR': '€',
@@ -13,11 +21,13 @@ document.addEventListener('DOMContentLoaded', () => {
         'HUF': 'Ft'
     };
 
-    // Set initial theme and currency from localStorage or default
-    const savedTheme = localStorage.getItem('theme') || 'dark';
-    const savedCurrency = localStorage.getItem('currency') || 'USD';
-    document.documentElement.setAttribute('data-theme', savedTheme);
-    currencySelect.value = savedCurrency;
+    // Set initial currency if not already set
+    if (!localStorage.getItem('currency')) {
+        localStorage.setItem('currency', 'USD');
+    }
+    
+    // Initialize currency select
+    currencySelect.value = localStorage.getItem('currency') || 'USD';
 
     function getDecimalPlaces(number) {
         const decimalStr = number.toString().split('.')[1];
@@ -82,23 +92,27 @@ document.addEventListener('DOMContentLoaded', () => {
             };
         });
 
+        console.log('Saving data:', data); // Debug log
         localStorage.setItem('whereToBuyItData', JSON.stringify(data));
     }
 
     function loadFromLocalStorage() {
         const savedData = localStorage.getItem('whereToBuyItData');
+        console.log('Loading saved data:', savedData); // Debug log
         if (savedData) {
             try {
                 const data = JSON.parse(savedData);
+                console.log('Parsed data:', data); // Debug log
                 
+                // Load currency first
+                if (data.currency && currencySymbols[data.currency]) {
+                    console.log('Setting currency to:', data.currency); // Debug log
+                    currencySelect.value = data.currency;
+                }
+
                 // Load theme
                 if (data.theme) {
                     document.documentElement.setAttribute('data-theme', data.theme);
-                }
-
-                // Load currency
-                if (data.currency && currencySymbols[data.currency]) {
-                    currencySelect.value = data.currency;
                 }
 
                 // Load store data
@@ -123,7 +137,6 @@ document.addEventListener('DOMContentLoaded', () => {
                 updatePrices();
             } catch (error) {
                 console.error('Error loading saved data:', error);
-                // Clear potentially corrupted data
                 localStorage.removeItem('whereToBuyItData');
             }
         }
@@ -222,6 +235,7 @@ document.addEventListener('DOMContentLoaded', () => {
     });
 
     currencySelect.addEventListener('change', () => {
+        localStorage.setItem('currency', currencySelect.value);
         updatePrices();
     });
 
