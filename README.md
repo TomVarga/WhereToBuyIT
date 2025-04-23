@@ -1,3 +1,9 @@
+<div align="center">
+<h1 style="font-size: 200%; color: #FF0000;">
+🔥 THIS WAS VIBECODED 🔥
+</h1>
+</div>
+
 # Where To Buy IT
 
 A static webpage calculator that helps you compare prices between two stores, taking into account unit pricing and delivery fees.
