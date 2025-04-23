@@ -74,11 +74,11 @@ document.addEventListener('DOMContentLoaded', () => {
 
         ['1', '2'].forEach(storeId => {
             data.stores[storeId] = {
-                name: document.querySelector(`.store-name[data-store="${storeId}"]`).value,
-                price: document.querySelector(`.price[data-store="${storeId}"]`).value,
-                units: document.querySelector(`.units[data-store="${storeId}"]`).value,
-                quantity: document.querySelector(`.quantity[data-store="${storeId}"]`).value,
-                delivery: document.querySelector(`.delivery[data-store="${storeId}"]`).value
+                name: document.querySelector(`.store-name[data-store="${storeId}"]`)?.value || '',
+                price: document.querySelector(`.price[data-store="${storeId}"]`)?.value || '',
+                units: document.querySelector(`.units[data-store="${storeId}"]`)?.value || '',
+                quantity: document.querySelector(`.quantity[data-store="${storeId}"]`)?.value || '',
+                delivery: document.querySelector(`.delivery[data-store="${storeId}"]`)?.value || ''
             };
         });
 
@@ -88,35 +88,53 @@ document.addEventListener('DOMContentLoaded', () => {
     function loadFromLocalStorage() {
         const savedData = localStorage.getItem('whereToBuyItData');
         if (savedData) {
-            const data = JSON.parse(savedData);
-            
-            // Load theme and currency
-            document.documentElement.setAttribute('data-theme', data.theme || 'dark');
-            currencySelect.value = data.currency || 'USD';
-
-            // Load data for each store
-            ['1', '2'].forEach(storeId => {
-                if (data.stores[storeId]) {
-                    const store = data.stores[storeId];
-                    document.querySelector(`.store-name[data-store="${storeId}"]`).value = store.name || '';
-                    document.querySelector(`.price[data-store="${storeId}"]`).value = store.price || '';
-                    document.querySelector(`.units[data-store="${storeId}"]`).value = store.units || '';
-                    document.querySelector(`.quantity[data-store="${storeId}"]`).value = store.quantity || '';
-                    document.querySelector(`.delivery[data-store="${storeId}"]`).value = store.delivery || '';
+            try {
+                const data = JSON.parse(savedData);
+                
+                // Load theme
+                if (data.theme) {
+                    document.documentElement.setAttribute('data-theme', data.theme);
                 }
-            });
 
-            // Update calculations
-            updatePrices();
+                // Load currency
+                if (data.currency && currencySymbols[data.currency]) {
+                    currencySelect.value = data.currency;
+                }
+
+                // Load store data
+                ['1', '2'].forEach(storeId => {
+                    if (data.stores && data.stores[storeId]) {
+                        const store = data.stores[storeId];
+                        const nameInput = document.querySelector(`.store-name[data-store="${storeId}"]`);
+                        const priceInput = document.querySelector(`.price[data-store="${storeId}"]`);
+                        const unitsInput = document.querySelector(`.units[data-store="${storeId}"]`);
+                        const quantityInput = document.querySelector(`.quantity[data-store="${storeId}"]`);
+                        const deliveryInput = document.querySelector(`.delivery[data-store="${storeId}"]`);
+
+                        if (nameInput) nameInput.value = store.name || '';
+                        if (priceInput) priceInput.value = store.price || '';
+                        if (unitsInput) unitsInput.value = store.units || '';
+                        if (quantityInput) quantityInput.value = store.quantity || '';
+                        if (deliveryInput) deliveryInput.value = store.delivery || '';
+                    }
+                });
+
+                // Update calculations
+                updatePrices();
+            } catch (error) {
+                console.error('Error loading saved data:', error);
+                // Clear potentially corrupted data
+                localStorage.removeItem('whereToBuyItData');
+            }
         }
     }
     
     function calculatePrices(storeId) {
-        const priceInput = document.querySelector(`.price[data-store="${storeId}"]`).value;
-        const unitsInput = document.querySelector(`.units[data-store="${storeId}"]`).value;
-        const quantityInput = document.querySelector(`.quantity[data-store="${storeId}"]`).value;
-        const deliveryInput = document.querySelector(`.delivery[data-store="${storeId}"]`).value;
-        const storeName = document.querySelector(`.store-name[data-store="${storeId}"]`).value || `Store ${storeId}`;
+        const priceInput = document.querySelector(`.price[data-store="${storeId}"]`)?.value || '';
+        const unitsInput = document.querySelector(`.units[data-store="${storeId}"]`)?.value || '';
+        const quantityInput = document.querySelector(`.quantity[data-store="${storeId}"]`)?.value || '';
+        const deliveryInput = document.querySelector(`.delivery[data-store="${storeId}"]`)?.value || '';
+        const storeName = document.querySelector(`.store-name[data-store="${storeId}"]`)?.value || `Store ${storeId}`;
 
         const price = evaluateExpression(priceInput);
         const units = evaluateExpression(unitsInput);
@@ -160,7 +178,7 @@ document.addEventListener('DOMContentLoaded', () => {
         document.querySelector('#store2 .total-price').textContent = 
             `Total price per unit (with delivery): ${formatCurrency(store2Prices.totalPricePerUnit)}`;
 
-        // Calculate and display price difference
+        // Update price difference
         const priceDifference = Math.abs(store1Prices.total - store2Prices.total);
         const differenceElement = document.querySelector('.difference-amount');
         const savingsElement = document.querySelector('.savings-message');
@@ -195,25 +213,22 @@ document.addEventListener('DOMContentLoaded', () => {
         saveToLocalStorage();
     }
 
-    // Load saved data when page loads
+    // Initialize
     loadFromLocalStorage();
 
-    // Add event listeners to all inputs
+    // Add event listeners
     inputs.forEach(input => {
         input.addEventListener('input', updatePrices);
     });
 
-    // Add event listener for theme toggle
+    currencySelect.addEventListener('change', () => {
+        updatePrices();
+    });
+
     themeToggle.addEventListener('click', () => {
         const currentTheme = document.documentElement.getAttribute('data-theme');
         const newTheme = currentTheme === 'light' ? 'dark' : 'light';
         document.documentElement.setAttribute('data-theme', newTheme);
-        saveToLocalStorage();
-    });
-
-    // Add event listener for currency change
-    currencySelect.addEventListener('change', () => {
-        updatePrices();
         saveToLocalStorage();
     });
 }); 
