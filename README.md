@@ -2,6 +2,8 @@
 
 A static webpage calculator that helps you compare prices between two stores, taking into account unit pricing and delivery fees.
 
+🌐 [Try it live!](https://tomvarga.github.io/WhereToBuyIT)
+
 ## Features
 
 ### Store Information
